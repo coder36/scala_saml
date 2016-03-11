@@ -1,0 +1,21 @@
+# OpenSAML certificate Signing Spike
+
+Aim:
+
+* Generate SAML signature using X509 Certificate
+* Validate signature
+* Validate certificate
+* Validate certifcate against CA
+
+
+## Running
+
+```
+    sbt run
+```
+
+## Sample Output
+```
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><saml2p:AuthnRequest xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol" Destination="http://aa.cc.vv" ID="AAA" Version="2.0"><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><ds:Reference URI="#AAA"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>ygTMbBaWxx6bpKQeAwmvIs0R/PY=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>mpZ/+LrNLbksdMSldAWEAGy3Y0SOLg2eGQADhrSze06f01l+nQH5TDpc98fP+uGjsd2YIpjSakF9IX/PsmBSaTzIL0jyC6+bCK4Nt3FpB8Oy5LApHFIJlS14Rldxx9vWmTw3RVl3MPzg3bEeWAUcP2OQSLg9jVcanlilpIfYxIzmWHpvldIMEFvPW0ZTgVFgOac5n0CXYSnLUokMrAK83/Nxnu3jLY1x3OVp5LGPiioQPhVbKXx77iZSTm/DOxEniS8lmnU5reJFvZCuH59/iVofpklcqAuK7Q1szouUxM1Z3Qjc+hrTgXVYIwHiPhPdbDVnwoeWWaGlEbUUGYrzRmmZdliDIC6Nu7ekEEtDoWwBMnbXRcu0H5YjyJZcD/JzU+Jg5ri5YL0ktWqOS0WGjKWvost4Gr0LShQOEuWvy7sZ7OlzhyjghRqxQocZiVamzesziVsWbCU12u+f0gsWH2utv1B1p6uXdFIv7WswgMQ29yWsAVV4WcoisnMSLX0W4ASlRuEAOUVrxCicmHNuAI4ZSIbEIMtUr3v47tMaYM1smHQztGr7lOjUEiLZ4dYn4rBcPp/zh3WKUSYgg9edIOA07gvNsws+Aq9fkVjUBCBeufWpWug5evtJ9vECUm7SV6Diq+lBfybzl6y+K7ZFlVwMZw2sRSQJwK5KPottvI0=</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIFNjCCAx6gAwIBAgIBAjANBgkqhkiG9w0BAQUFADAlMRIwEAYDVQQHEwlOZXdjYXN0bGUxDzANBgNVBAMTBmNhLmdnMzAeFw0xNjAzMTExNDIzMDBaFw0xNzAzMTExNDIzMDBaMCcxEjAQBgNVBAcTCU5ld2Nhc3RsZTERMA8GA1UEAxMIcHJvdmlkZXIwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDbFdYdUmLF5j9OK8OCILLkSBtnYfCi4LJdogQ6h3HzSPBVfMThmIG9zOm42ZBsD7oWahGOCVVfvQfbm7LTSoCOLAoIu3m87qIxnAfxWqTudhk/4j5jhyHQpNTuGvHopiQiM9sTiu6rVQzrjCch+H2VVZO0V4QILIEgpnfqFA7u8By+Vmo+0N3mBtGenGcdo8Z1ONu/Nd6PPrVCLZtZrx7WXWMydKDVRz/GJMoos5j7onorMIhPwHo5mdejRhKX8kQ8X0hla4RUw0pIyXBGPQtw+0Bej3pB2h8842dgSDmI6KvnX2pNqhEoc6i0VHsxYTEcF0wuPFYqHD/jMdv9JiqiGCSb6xWYguKtY63julikxy1w6IITqzs56u6oG70o1aToaFujnlZ3DvXZ9u4M0oXDbkTDkbMLtKwGHX86OKKjhK5GJRp+WNaaP5siscgigdjPp83cM9dzl37kEbwbmLyH65sUBLBFHasDBhAb1Ah57Pqxx9HWhVaUyIT7812RZwxVvMU8uQvCXYINCGT1EyB/CQaNBmcSG15Oh9HMgg2++P9DGD//x6O/2b3GviiqEM4vAm9LodLRnzooSYEBEvvS8als4OaS3e+WjQnhWeBFDykHgKUsdZ9dV7OdaQhjuQzBf9jFTfcC6AgFA24/NoLtJyDwJ1npeh81+64aVavoTQIDAQABo28wbTAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBQu9T5EgLfA4YVn68bnm5HG6WAX7DALBgNVHQ8EBAMCBeAwEQYJYIZIAYb4QgEBBAQDAgZAMB4GCWCGSAGG+EIBDQQRFg94Y2EgY2VydGlmaWNhdGUwDQYJKoZIhvcNAQEFBQADggIBALa1WCD9YExM0h53Vhz0iXiuJJcI+adcnr6lDDIv0KGMY4N1bfmS1mQMVrdB2Qoyi0RBDE8dy01mwyAsBuNTvgEQe83ayLWWwlCxvPOpP9Mmez7lWEr2zb5Ky39mivh6jyr9R0cUBDnPMq6/hpbRrUuwYSV+N8DBkFMFWTyPNAJXydQ4a4AW33piGCM2KICRmbpbhPycix6vSrXuAUWxGPPMM5y2JRTGBTFvwhse9qoM/JpE1foW34JwzrnQMTbv5yK8jYgJEov6bQXdpTu9QIBRIXoEUkIuKaLGgSiEAOvYWpBVUE3hVjAtcYIaEXww4T5qslR5hwpzGnDhUcyYSqjPQ0kbUKJFLXA+ggysD7SXSpiKBpHQzK7hVTP5HYaCGW2H+MVRNy13qPS7mcXXAihOHVuRybAcMne5+c0cImWuZoLiHTuWW/UxwCR1GSaSInZJJDC8GYyJZYvXPrzkJVBErf32kthVUxPbt8Vumvoq4vKxl7vfYWzOvW4dO3+UNiGSu02yykGeYgjralQrkk1BhxIwxAYciQaVmA/nRkhXH1WFsj65zmW68e/n5zyKKINW/xMfutMvaJtALGvlxLcnpmHL2fwmOeTYvspUzdQKq359dBAMO5fGFhDNGp4zNVF381jssOf8mVAz9wFlDmRQIXJMT9GczEFm9vLs/W+H</ds:X509Certificate></ds:X509Data></ds:KeyInfo></ds:Signature></saml2p:AuthnRequest>
+[success] Total time: 7 s, completed 11-Mar-2016 16:28:13
+```
