@@ -271,15 +271,14 @@ class SamlSpec extends FlatSpec with Matchers {
 
   "SAMLUtil.createAuthnRequest" should "create authentication requests" in {
     val xml = createAuthnRequest
+    println(xml)
     val req = SAMLUtil.read( xml ).asInstanceOf[AuthnRequest]
-    req.getID should be("AAA")
-
-
   }
 
-  it should "have a signature generated using rsa-sha1" in {
+
+  it should "have a signature generated using rsa-sha512" in {
     val saml = SAMLUtil.read( createAuthnRequest ).asInstanceOf[AuthnRequest]
-    saml.getSignature.getSignatureAlgorithm should include("rsa-sha1")
+    saml.getSignature.getSignatureAlgorithm should include("rsa-sha512")
     val signingCert = saml.getSignature.getKeyInfo.getX509Datas.get(0).getX509Certificates.get(0)
     normalize(serviceProviderCert) should be(signingCert.getValue)
   }

@@ -1,4 +1,5 @@
 import java.io._
+import java.nio.charset.StandardCharsets
 import java.security.cert.{CertPathValidator, CertificateFactory, PKIXParameters, TrustAnchor, X509Certificate => JavaX509Certificate}
 import javax.xml.namespace.QName
 import javax.xml.parsers.DocumentBuilderFactory
@@ -6,7 +7,6 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
-import org.apache.xml.security.utils.Base64
 import org.bouncycastle.openssl.PEMParser
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
 import org.opensaml.DefaultBootstrap
@@ -16,6 +16,7 @@ import org.opensaml.xml.security.x509.BasicX509Credential
 import org.opensaml.xml.signature._
 import org.opensaml.xml.{Configuration, XMLObject}
 import org.w3c.dom.Document
+import java.util.{Base64, UUID}
 
 import scala.collection.JavaConversions._
 
@@ -39,15 +40,15 @@ class SAMLUtil {
     val x509Certificate = create[X509Certificate](X509Certificate.DEFAULT_ELEMENT_NAME)
     val credential = createSigningCredential( signingCert, signingKey)
 
-    signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA)
+    signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA512)
     signature.setSigningCredential(credential)
     signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS)
     signature.setKeyInfo(keyInfo)
     keyInfo.getX509Datas.add(x509Data)
     x509Data.getX509Certificates.add( x509Certificate )
-    x509Certificate.setValue(Base64.encode(credential.getEntityCertificate().getEncoded()))
+    x509Certificate.setValue(Base64.getEncoder().encodeToString(credential.getEntityCertificate().getEncoded()))
 
-    authnRequest.setID("AAA")
+    authnRequest.setID(UUID.randomUUID.toString)
     authnRequest.setDestination("http://aa.cc.vv")
     authnRequest.setSignature(signature)
 
@@ -132,5 +133,12 @@ class SAMLUtil {
     docWriter.toString
   }
 
+  private def encode(saml: String) : String = {
+    Base64.getEncoder().encodeToString(saml.getBytes(StandardCharsets.UTF_8))
+  }
+
+  private def decode(b64saml: String) : String = {
+    Base64.getDecoder().decode(b64saml).toString
+  }
 
 }
