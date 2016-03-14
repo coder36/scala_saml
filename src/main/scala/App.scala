@@ -152,9 +152,10 @@ object App {
 
 
   def main(args: Array[String]) : Unit = {
-    val s = SAMLUtil.createAuthnRequest( serviceProviderCert, serviceProviderCertPrivateKey )
+
+    val s = SAMLUtil.createResponse( serviceProviderCert, serviceProviderCertPrivateKey, Map( "ZZZZZZZZZ" -> "XXXXXXXXXXXXXX" ) )
     println(s)
-    SAMLUtil.validate(s, caCert) ((xml) => xml.asInstanceOf[AuthnRequest].getSignature )
+//    SAMLUtil.validate(s, caCert) ((xml) => xml.asInstanceOf[AuthnRequest].getSignature )
   }
 
 

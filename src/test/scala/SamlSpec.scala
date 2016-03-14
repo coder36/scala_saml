@@ -1,5 +1,7 @@
-import org.opensaml.saml2.core.AuthnRequest
+import org.opensaml.saml2.core.{Attribute, Assertion, AuthnRequest, Response}
 import org.scalatest.{FlatSpec, Matchers}
+import scala.collection.mutable.{Map => mMap}
+import scala.collection.JavaConversions._
 
 class SamlSpec extends FlatSpec with Matchers {
 
@@ -271,7 +273,6 @@ class SamlSpec extends FlatSpec with Matchers {
 
   "SAMLUtil.createAuthnRequest" should "create authentication requests" in {
     val xml = createAuthnRequest
-    println(xml)
     val req = SAMLUtil.read( xml ).asInstanceOf[AuthnRequest]
   }
 
@@ -304,6 +305,25 @@ class SamlSpec extends FlatSpec with Matchers {
       "<ds:SignatureValue>", "<ds:SignatureValue>THIS_IS_AN_INVALID_SIGNATURE" )
 
     SAMLUtil.validate(saml, caCert ) ((xml) => xml.asInstanceOf[AuthnRequest].getSignature ) should equal('saml_validation_failed)
+  }
+
+
+
+  "SAMLUtil.createResponse" should "create saml responses" in {
+    val saml = SAMLUtil.createResponse( serviceProviderCert, serviceProviderCertPrivateKey, Map())
+    SAMLUtil.validate(saml, caCert ) ((xml) => xml.asInstanceOf[Response].getSignature ) should equal('ok)
+  }
+
+  "SAMLUtil.extractResponse" should "extract a Map of values" in {
+    val saml = SAMLUtil.createResponse( serviceProviderCert, serviceProviderCertPrivateKey, Map("xxx" -> "yyy", "aaa" -> "bbb"))
+    val resp = SAMLUtil.read(saml).asInstanceOf[Response]
+
+    val attributes = resp.getAssertions.headOption.flatMap(_.getAttributeStatements.headOption.map(_.getAttributes))
+      .getOrElse(new java.util.ArrayList[Attribute]())
+
+    val attributeMap = SAMLUtil.extractAttributes(attributes)
+    attributeMap should contain("xxx" -> "yyy")
+    attributeMap should contain("aaa" -> "bbb")
   }
 
 
