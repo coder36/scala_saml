@@ -11,7 +11,8 @@ Aim:
 ## Running
 
 ```
-    sbt run
+    sbt test
+
 ```
 
 ## Sample Output
